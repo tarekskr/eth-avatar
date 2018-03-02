@@ -1,0 +1,13 @@
+# Logs
+logs
+*.log
+
+# Dependency directory
+node_modules
+
+# Generated files
+build
+dist
+
+# OS
+.DS_Store
