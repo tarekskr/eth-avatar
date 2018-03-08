@@ -92,6 +92,18 @@ class App extends Component {
       );
     }
 
+    if(this.state.ethAddress === null) {
+      return(
+        // Display a web3 warning.
+        <div className="App">
+            <main className="container">
+              <h1>⚠️</h1>
+              <p>MetaMask seems to be locked.</p>
+            </main>
+        </div>
+      );
+    }
+
     if(this.state.ethAvatarIPFSHash !== undefined) {
       return (
         <div className="App">
