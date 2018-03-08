@@ -1,20 +1,25 @@
-import React, { Component } from 'react'
-import SimpleStorageContract from '../build/contracts/SimpleStorage.json'
-import getWeb3 from './utils/getWeb3'
+import React, { Component } from 'react';
+import EthAvatarContract from '../build/contracts/EthAvatar.json';
+import getWeb3 from './utils/getWeb3';
 
-import './css/oswald.css'
-import './css/open-sans.css'
-import './css/pure-min.css'
-import './App.css'
+import EthAvatarImage from './components/EthAvatarImage.js';
+import EthAvatarForm from './components/EthAvatarForm.js';
+
+import './css/oswald.css';
+import './css/open-sans.css';
+import './css/pure-min.css';
+import './App.css';
 
 class App extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
-      storageValue: 0,
-      web3: null
-    }
+      web3: undefined,
+      ethAddress: undefined,
+      ethAvatarInstance: undefined,
+      ethAvatarIPFSHash: undefined
+    };
   }
 
   componentWillMount() {
@@ -24,71 +29,96 @@ class App extends Component {
     getWeb3
     .then(results => {
       this.setState({
-        web3: results.web3
-      })
+        web3: results.web3,
+        ethAddress: results.web3.eth.coinbase
+      });
 
       // Instantiate contract once web3 provided.
-      this.instantiateContract()
+      this.instantiateContract();
     })
     .catch(() => {
-      console.log('Error finding web3.')
-    })
+      this.setState({
+        web3: null
+      });
+      console.log('Error finding web3.');
+    });
   }
 
   instantiateContract() {
-    /*
-     * SMART CONTRACT EXAMPLE
-     *
-     * Normally these functions would be called in the context of a
-     * state management library, but for convenience I've placed them here.
-     */
-
-    const contract = require('truffle-contract')
-    const simpleStorage = contract(SimpleStorageContract)
-    simpleStorage.setProvider(this.state.web3.currentProvider)
-
-    // Declaring this for later so we can chain functions on SimpleStorage.
-    var simpleStorageInstance
+    const contract = require('truffle-contract');
+    const ethAvatar = contract(EthAvatarContract);
+    ethAvatar.setProvider(this.state.web3.currentProvider);
 
     // Get accounts.
     this.state.web3.eth.getAccounts((error, accounts) => {
-      simpleStorage.deployed().then((instance) => {
-        simpleStorageInstance = instance
+      ethAvatar.deployed().then((instance) => {
+        var ethAvatarInstance = instance;
 
-        // Stores a given value, 5 by default.
-        return simpleStorageInstance.set(5, {from: accounts[0]})
-      }).then((result) => {
-        // Get the value from the contract to prove it worked.
-        return simpleStorageInstance.get.call(accounts[0])
+        this.setState({
+          ethAvatarInstance: ethAvatarInstance
+        });
+
+        // watch the DidSetIPFSHash event
+        var didSetIPFSHashEvent = ethAvatarInstance.DidSetIPFSHash();
+        didSetIPFSHashEvent.watch((error, result) => {
+            if(!error)
+            {
+              // set the updated hash
+              if(result.args.hashAddress === this.state.ethAddress)
+                this.setState({ ethAvatarIPFSHash: result.args.hash });
+            }
+          }
+        );
+
+        // use ethAvatarInstance to retreive the hash of the current account
+        return ethAvatarInstance.getIPFSHash.call({ from: this.state.ethAddress });
       }).then((result) => {
         // Update state with the result.
-        return this.setState({ storageValue: result.c[0] })
-      })
-    })
+        return this.setState({ ethAvatarIPFSHash: result });
+      });
+    });
   }
 
   render() {
-    return (
-      <div className="App">
-        <nav className="navbar pure-menu pure-menu-horizontal">
-            <a href="#" className="pure-menu-heading pure-menu-link">Truffle Box</a>
-        </nav>
+    if(this.state.web3 === null) {
+      return(
+        // Display a web3 warning.
+        <div className="App">
+            <main className="container">
+              <h1>⚠️</h1>
+              <p>This browser has no connection to the Ethereum network. Please use the Chrome/FireFox extension MetaMask, or dedicated Ethereum browsers Mist or Parity.</p>
+            </main>
+        </div>
+      );
+    }
 
+    if(this.state.ethAvatarIPFSHash !== undefined) {
+      return (
+        <div className="App">
+          <main className="container">
+            <h1>Welcome to Eth Avatar!</h1>
+            <h2>Current Ethereum Address: </h2><h3><code>{this.state.ethAddress}</code></h3>
+            <h2>Associated Avatar: </h2>
+            <EthAvatarImage ethAvatarInstance={this.state.ethAvatarInstance} ethAddress={this.state.ethAddress} ipfsHash={this.state.ethAvatarIPFSHash} />
+            <br />
+            <hr />
+            <h1>Upload New Avatar</h1>
+            <EthAvatarForm ethAvatarInstance={this.state.ethAvatarInstance} ethAddress={this.state.ethAddress} />
+          </main>
+        </div>
+      );
+    }
+
+    return(
+      // Display a loading indicator.
+      <div className="App">
         <main className="container">
-          <div className="pure-g">
-            <div className="pure-u-1-1">
-              <h1>Good to Go!</h1>
-              <p>Your Truffle Box is installed and ready.</p>
-              <h2>Smart Contract Example</h2>
-              <p>If your contracts compiled and migrated successfully, below will show a stored value of 5 (by default).</p>
-              <p>Try changing the value stored on <strong>line 59</strong> of App.js.</p>
-              <p>The stored value is: {this.state.storageValue}</p>
-            </div>
-          </div>
+          <h1>Loading EthAvatar...</h1>
         </main>
       </div>
     );
+
   }
 }
 
-export default App
+export default App;
