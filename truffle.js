@@ -1,3 +1,8 @@
+var HDWalletProvider = require("truffle-hdwallet-provider");
+
+// This is the default Ganache mnemonic
+var rinkebyMnemonic = "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat";
+
 module.exports = {
   networks: {
     development: {
@@ -7,7 +12,7 @@ module.exports = {
     },
     rinkeby: {
       provider: function() {
-        return new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/");
+        return new HDWalletProvider(rinkebyMnemonic, "https://rinkeby.infura.io/");
       },
       network_id: '4',
       from: "0x627306090abab3a6e1400e9345bc60c78a8bef57",
