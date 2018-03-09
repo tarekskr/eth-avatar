@@ -11,7 +11,7 @@ This project is free and open source.  We hope to see other projects make use of
 
 ## Demo
 
-<img src='demo/demo.gif'>
+<a href="https://ethavatar.com"><img src='demo/demo.gif'></a>
 
 ## Current Deployments
 * Dapp: https://ethavatar.com (make sure you visit using an Ethereum browser)
