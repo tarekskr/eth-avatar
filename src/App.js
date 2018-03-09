@@ -71,7 +71,7 @@ class App extends Component {
         );
 
         // use ethAvatarInstance to retreive the hash of the current account
-        return ethAvatarInstance.getIPFSHash.call({ from: this.state.ethAddress });
+        return ethAvatarInstance.getIPFSHash.call(this.state.ethAddress);
       }).then((result) => {
         // Update state with the result.
         return this.setState({ ethAvatarIPFSHash: result });

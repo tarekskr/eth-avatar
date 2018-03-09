@@ -12,7 +12,7 @@ contract EthAvatar {
         DidSetIPFSHash(msg.sender, hash);
     }
 
-    function getIPFSHash() public view returns (string) {
-        return ipfsHashes[msg.sender];
+    function getIPFSHash(address hashAddress) public view returns (string) {
+        return ipfsHashes[hashAddress];
     }
 }

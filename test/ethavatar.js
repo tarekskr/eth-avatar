@@ -9,7 +9,7 @@ contract('EthAvatar', function(accounts) {
 
       return ethAvatarInstance.setIPFSHash(hash, {from: accounts[0]});
     }).then(function() {
-      return ethAvatarInstance.getIPFSHash.call();
+      return ethAvatarInstance.getIPFSHash.call(accounts[0]);
     }).then(function(storedHash) {
       assert.equal(storedHash, hash, "Stored hash does not equal: " + hash);
     });
