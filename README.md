@@ -1,8 +1,10 @@
 # Eth Avatar - Gravatar for Ethereum addresses
 
-***Eth Avatar*** associates an avatar of your choice with an Ethereum address that you own. The avatar image is stored on [IPFS](https://ipfs.io) and is bound to your address via an Ethereum [smart contract](https://etherscan.io/address/0x4FbF2f1613Cc86314b22AE10Ae95D19cF2990824#code).
+***Eth Avatar*** associates an avatar of your choice with an Ethereum address that you own. 
 
-This project is free and open source.  We hope to see other projects make use of it!
+We hope this project will be a "gravatar for ethereum addresses".
+
+This project is free and open source.  We hope to see other projects make use of it!  The more projects use it, the more useful it is.  
 
 ## Possible Use Cases
 * **Visual Verification:** When sending ether to an exchange for instance, instead of being paranoid if you've pasted the correct address, wallets that support Eth Avatar will be able to fetch the exchange logo as a forms of visual verification. The same also works the other way around when transferring from the exchange to your own wallet.
@@ -12,6 +14,10 @@ This project is free and open source.  We hope to see other projects make use of
 ## Demo
 
 <a href="https://ethavatar.com"><img src='demo/demo.gif'></a>
+
+## How it works
+
+The avatar image is stored on [IPFS](https://ipfs.io) and is bound to your address via an Ethereum [smart contract](https://etherscan.io/address/0x4FbF2f1613Cc86314b22AE10Ae95D19cF2990824#code).
 
 ## Current Deployments
 * Dapp: https://ethavatar.com (make sure you visit using an Ethereum browser)
