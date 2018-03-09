@@ -39,3 +39,8 @@
 6. Launch the Dapp
 
     `$ npm run start`
+
+
+<!-- Google Analytics -->
+<img src='https://ga-beacon.appspot.com/UA-102304388-1/gitcoinco/ethavatar' style='width:1px; height:1px;' >
+
